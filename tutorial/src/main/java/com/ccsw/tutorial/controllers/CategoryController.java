@@ -32,7 +32,7 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
-    
+
     @Autowired
     ModelMapper mapper;
 
@@ -47,20 +47,21 @@ public class CategoryController {
         List<Category> categories = this.categoryService.findAll();
 
         return categories.stream().map(e -> mapper.map(e, CategoryDto.class)).collect(Collectors.toList());
-    
+
     }
 
     /**
      * Método para crear o actualizar una {@link Category}
      *
-     * @param id PK de la entidad
+     * @param id  PK de la entidad
      * @param dto datos de la entidad
      */
     @Operation(summary = "Save or Update", description = "Method that saves or updates a Category")
     @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
-    public ResponseEntity<String> save(@PathVariable(name = "id", required = false) Long id, @RequestBody CategoryDto dto) {
+    public ResponseEntity<String> save(@PathVariable(name = "id", required = false) Long id,
+            @RequestBody CategoryDto dto) {
         this.categoryService.save(id, dto);
-        return ResponseEntity.ok("Se ha realizado correctamente la acción");
+        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
     }
 
     /**
@@ -72,6 +73,6 @@ public class CategoryController {
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(@PathVariable("id") Long id) throws Exception {
         this.categoryService.delete(id);
-        return ResponseEntity.ok("Se ha realizado correctamente el borrado");
+        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente el borrado\"}");
     }
 }
