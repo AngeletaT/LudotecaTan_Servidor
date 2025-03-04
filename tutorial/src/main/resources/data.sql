@@ -18,3 +18,14 @@ INSERT INTO game(title, age, category_id, author_id) VALUES
 ('Barrage', '14', 1, 3),
 ('Los viajes de Marco Polo', '12', 1, 3),
 ('Azul', '8', 3, 5);
+INSERT INTO client(name) VALUES
+('Pablo'),
+('Jordi'),
+('Carla'),
+('Salva'),
+('Guillermo'),
+('Anna'),
+('Carlos'),
+('Marta'),
+('Luis'),
+('Laura');
