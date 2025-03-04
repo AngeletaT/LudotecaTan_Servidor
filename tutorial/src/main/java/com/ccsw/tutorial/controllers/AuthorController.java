@@ -1,6 +1,7 @@
 package com.ccsw.tutorial.controllers;
 
 import java.util.stream.Collectors;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,20 @@ public class AuthorController {
         return new PageImpl<>(
                 page.getContent().stream().map(e -> mapper.map(e, AuthorDto.class)).collect(Collectors.toList()),
                 page.getPageable(), page.getTotalElements());
+    }
+
+    /**
+     * Recupera un listado de autores {@link Author}
+     *
+     * @return {@link List} de {@link AuthorDto}
+     */
+    @Operation(summary = "Find", description = "Method that return a list of Authors")
+    @RequestMapping(path = "", method = RequestMethod.GET)
+    public List<AuthorDto> findAll() {
+
+        List<Author> authors = this.authorService.findAll();
+
+        return authors.stream().map(e -> mapper.map(e, AuthorDto.class)).collect(Collectors.toList());
     }
 
     /**

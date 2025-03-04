@@ -1,16 +1,15 @@
 package com.ccsw.tutorial.service.category;
 
-import com.ccsw.tutorial.entities.Category;
-import com.ccsw.tutorial.dto.CategoryDto;
-
-import jakarta.transaction.Transactional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+import com.ccsw.tutorial.dto.CategoryDto;
+import com.ccsw.tutorial.entities.Category;
 import com.ccsw.tutorial.repository.CategoryRepository;
+
+import jakarta.transaction.Transactional;
 
 /**
  * @author ccsw
@@ -22,6 +21,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Category get(Long id) {
+
+        return this.categoryRepository.findById(id).orElse(null);
+    }
 
     /**
      * {@inheritDoc}
@@ -43,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (id == null) {
             category = new Category();
         } else {
-            category = this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+            category = this.get(id);
         }
 
         category.setName(dto.getName());
@@ -57,12 +65,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Long id) throws Exception {
 
-        if(this.categoryRepository.findById(id).orElse(null) == null) {
-            throw new Exception("Category not found");
-        } else {
-            this.categoryRepository.deleteById(id);
+        if (this.get(id) == null) {
+            throw new Exception("Not exists");
         }
 
+        this.categoryRepository.deleteById(id);
     }
 
 }
