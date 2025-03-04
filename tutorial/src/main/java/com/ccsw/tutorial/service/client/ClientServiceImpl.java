@@ -1,19 +1,20 @@
 package com.ccsw.tutorial.service.client;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ccsw.tutorial.dto.ClientDto;
 import com.ccsw.tutorial.entities.Client;
+import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 import com.ccsw.tutorial.repository.ClientRepository;
 
 import jakarta.transaction.Transactional;
 
 /**
- * @author ccsw
- *
+ * Implementation of ClientService interface.
  */
 @Service
 @Transactional
@@ -42,7 +43,12 @@ public class ClientServiceImpl implements ClientService {
      * {@inheritDoc}
      */
     @Override
-    public void save(Long id, ClientDto dto) {
+    public void save(Long id, ClientDto dto) throws ClientAlreadyExistsException {
+        Optional<Client> existingClient = this.clientRepository.findByName(dto.getName());
+        if (existingClient.isPresent() && (id == null || !existingClient.get().getId().equals(id))) {
+            throw new ClientAlreadyExistsException("Ya existe un cliente con el mismo nombre");
+        }
+
         Client client;
         if (id == null) {
             client = new Client();

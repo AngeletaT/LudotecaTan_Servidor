@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ccsw.tutorial.dto.ClientDto;
 import com.ccsw.tutorial.entities.Client;
+import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 import com.ccsw.tutorial.service.client.ClientService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,8 +61,12 @@ public class ClientController {
     @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
     public ResponseEntity<String> save(@PathVariable(name = "id", required = false) Long id,
             @RequestBody ClientDto dto) {
-        this.clientService.save(id, dto);
-        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+        try {
+            this.clientService.save(id, dto);
+            return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+        } catch (ClientAlreadyExistsException e) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     /**

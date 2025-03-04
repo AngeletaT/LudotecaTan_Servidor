@@ -7,6 +7,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,11 +20,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ccsw.tutorial.dto.ClientDto;
 import com.ccsw.tutorial.entities.Client;
+import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 import com.ccsw.tutorial.repository.ClientRepository;
 import com.ccsw.tutorial.service.client.ClientServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-
 public class ClientTest {
     @Mock
     private ClientRepository clientRepository;
@@ -50,7 +51,7 @@ public class ClientTest {
     public static final String CLIENT_NAME = "CAT1";
 
     @Test
-    public void saveNotExistsClientIdShouldInsert() {
+    public void saveNotExistsClientIdShouldInsert() throws ClientAlreadyExistsException {
 
         ClientDto clientDto = new ClientDto();
         clientDto.setName(CLIENT_NAME);
@@ -68,7 +69,7 @@ public class ClientTest {
     public static final Long EXISTS_CLIENT_ID = 1L;
 
     @Test
-    public void saveExistsClientIdShouldUpdate() {
+    public void saveExistsClientIdShouldUpdate() throws ClientAlreadyExistsException {
 
         ClientDto clientDto = new ClientDto();
         clientDto.setName(CLIENT_NAME);
@@ -119,4 +120,21 @@ public class ClientTest {
         assertNull(client);
     }
 
+    // TEST DUPLICATE CLIENT NAME
+    @Test
+    public void saveDuplicateClientNameShouldThrowException() {
+
+        ClientDto clientDto = new ClientDto();
+        clientDto.setName(CLIENT_NAME);
+
+        Client existingClient = new Client();
+        existingClient.setId(EXISTS_CLIENT_ID);
+        existingClient.setName(CLIENT_NAME);
+
+        when(clientRepository.findByName(CLIENT_NAME)).thenReturn(Optional.of(existingClient));
+
+        assertThrows(ClientAlreadyExistsException.class, () -> {
+            clientService.save(null, clientDto);
+        });
+    }
 }

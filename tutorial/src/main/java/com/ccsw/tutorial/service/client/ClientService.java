@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ccsw.tutorial.dto.ClientDto;
 import com.ccsw.tutorial.entities.Client;
+import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 
 /**
  * @author ccsw
@@ -32,7 +33,7 @@ public interface ClientService {
      * @param id  PK de la entidad
      * @param dto datos de la entidad
      */
-    void save(Long id, ClientDto dto);
+    void save(Long id, ClientDto dto) throws ClientAlreadyExistsException;
 
     /**
      * Método para borrar una {@link Client}
@@ -40,5 +41,4 @@ public interface ClientService {
      * @param id PK de la entidad
      */
     void delete(Long id) throws Exception;
-
 }
