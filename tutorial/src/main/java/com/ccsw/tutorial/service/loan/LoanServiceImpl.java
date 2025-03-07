@@ -2,6 +2,8 @@ package com.ccsw.tutorial.service.loan;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.ccsw.tutorial.dto.LoanDto;
 import com.ccsw.tutorial.dto.LoanSearchDto;
+import com.ccsw.tutorial.dto.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
 import com.ccsw.tutorial.infrastructure.specifications.LoanSpecification;
 import com.ccsw.tutorial.repository.ClientRepository;
@@ -158,4 +161,61 @@ public class LoanServiceImpl implements LoanService {
 
         this.loanRepository.deleteById(id);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LoanValidationResponse validateLoan(LoanDto loanDto) {
+        LoanValidationResponse response = new LoanValidationResponse();
+        List<String> errorMessages = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date rentalDate, returnDate;
+        try {
+            rentalDate = sdf.parse(loanDto.getRentalDate());
+            returnDate = sdf.parse(loanDto.getReturnDate());
+        } catch (ParseException e) {
+            errorMessages.add("Formato de fecha inválido.");
+            response.setValid(false);
+            response.setErrorMessages(errorMessages);
+            return response;
+        }
+
+        // Validaciones de fechas
+        if (returnDate.before(rentalDate)) {
+            errorMessages.add("La fecha de devolución no puede ser anterior a la fecha de préstamo.");
+        }
+        long diffMillis = returnDate.getTime() - rentalDate.getTime();
+        long diffDays = diffMillis / (1000 * 60 * 60 * 24);
+        if (diffDays > 14) {
+            errorMessages.add("El periodo de préstamo máximo es de 14 días.");
+        }
+
+        // Generar rango de fechas (incluyendo ambos extremos)
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(rentalDate);
+        while (!cal.getTime().after(returnDate)) {
+            Date currentDate = cal.getTime();
+
+            // Validación para el Juego
+            List<Loan> loansForGame = this.loanRepository.findLoansForGameOnDate(
+                    loanDto.getGame().getId(), currentDate, loanDto.getId());
+            if (!loansForGame.isEmpty()) {
+                errorMessages.add("El juego ya está prestado a otro cliente el día " + sdf.format(currentDate) + ".");
+            }
+
+            // Validación para el Cliente
+            List<Loan> loansForClient = this.loanRepository.findLoansForClientOnDate(
+                    loanDto.getClient().getId(), currentDate, loanDto.getId());
+            if (loansForClient.size() >= 2) {
+                errorMessages.add("El cliente ya tiene prestados 2 juegos el día " + sdf.format(currentDate) + ".");
+            }
+            cal.add(Calendar.DATE, 1);
+        }
+
+        response.setValid(errorMessages.isEmpty());
+        response.setErrorMessages(errorMessages);
+        return response;
+    }
+
 }

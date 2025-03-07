@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import com.ccsw.tutorial.dto.LoanDto;
 import com.ccsw.tutorial.dto.LoanSearchDto;
+import com.ccsw.tutorial.dto.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
 
 /**
@@ -69,5 +70,13 @@ public interface LoanService {
      * @param id PK de la entidad
      */
     void delete(Long id) throws Exception;
+
+    /**
+     * Método para validar un {@link Loan}
+     *
+     * @param dto datos de la entidad
+     * @return {@link LoanValidationResponse}
+     */
+    LoanValidationResponse validateLoan(LoanDto dto);
 
 }

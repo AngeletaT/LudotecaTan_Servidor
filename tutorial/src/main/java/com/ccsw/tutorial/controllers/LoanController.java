@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ccsw.tutorial.dto.LoanDto;
 import com.ccsw.tutorial.dto.LoanSearchDto;
+import com.ccsw.tutorial.dto.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
 import com.ccsw.tutorial.service.loan.LoanService;
 
@@ -122,7 +123,18 @@ public class LoanController {
     public ResponseEntity<String> delete(@PathVariable Long id) throws Exception {
         this.loanService.delete(id);
         return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+    }
 
+    /**
+     * Método para validar un {@link Loan}
+     *
+     * @param dto datos de la entidad
+     * @return {@link LoanValidationResponse}
+     */
+    @Operation(summary = "Validate Loan", description = "Method that validates a Loan")
+    @RequestMapping(path = "/validate", method = RequestMethod.POST)
+    public LoanValidationResponse validateLoan(@RequestBody LoanDto dto) {
+        return this.loanService.validateLoan(dto);
     }
 
 }
