@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.ccsw.tutorial.dto.AuthorDto;
-import com.ccsw.tutorial.dto.AuthorSearchDto;
+import com.ccsw.tutorial.dto.author.AuthorDto;
+import com.ccsw.tutorial.dto.author.AuthorSearchDto;
 import com.ccsw.tutorial.entities.Author;
 import com.ccsw.tutorial.repository.AuthorRepository;
 

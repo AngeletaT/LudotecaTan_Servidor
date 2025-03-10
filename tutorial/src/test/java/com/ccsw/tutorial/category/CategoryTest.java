@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ccsw.tutorial.dto.CategoryDto;
+import com.ccsw.tutorial.dto.category.CategoryDto;
 import com.ccsw.tutorial.entities.Category;
 import com.ccsw.tutorial.repository.CategoryRepository;
 import com.ccsw.tutorial.service.category.CategoryServiceImpl;

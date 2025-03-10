@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ccsw.tutorial.dto.LoanDto;
-import com.ccsw.tutorial.dto.LoanSearchDto;
-import com.ccsw.tutorial.dto.LoanValidationResponse;
+import com.ccsw.tutorial.dto.loan.LoanDto;
+import com.ccsw.tutorial.dto.loan.LoanSearchDto;
+import com.ccsw.tutorial.dto.loan.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
 import com.ccsw.tutorial.service.loan.LoanService;
 

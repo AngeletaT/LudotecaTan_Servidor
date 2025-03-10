@@ -2,7 +2,7 @@ package com.ccsw.tutorial.service.category;
 
 import java.util.List;
 
-import com.ccsw.tutorial.dto.CategoryDto;
+import com.ccsw.tutorial.dto.category.CategoryDto;
 import com.ccsw.tutorial.entities.Category;
 
 /**

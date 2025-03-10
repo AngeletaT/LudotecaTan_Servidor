@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ccsw.tutorial.dto.GameDto;
+import com.ccsw.tutorial.dto.game.GameDto;
 import com.ccsw.tutorial.entities.Game;
 import com.ccsw.tutorial.service.game.GameService;
 

@@ -13,9 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.ccsw.tutorial.dto.LoanDto;
-import com.ccsw.tutorial.dto.LoanSearchDto;
-import com.ccsw.tutorial.dto.LoanValidationResponse;
+import com.ccsw.tutorial.dto.loan.LoanDto;
+import com.ccsw.tutorial.dto.loan.LoanSearchDto;
+import com.ccsw.tutorial.dto.loan.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
 import com.ccsw.tutorial.infrastructure.specifications.LoanSpecification;
 import com.ccsw.tutorial.repository.ClientRepository;

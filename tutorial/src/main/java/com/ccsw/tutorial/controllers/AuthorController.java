@@ -1,7 +1,7 @@
 package com.ccsw.tutorial.controllers;
 
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ccsw.tutorial.dto.AuthorDto;
-import com.ccsw.tutorial.dto.AuthorSearchDto;
+import com.ccsw.tutorial.dto.author.AuthorDto;
+import com.ccsw.tutorial.dto.author.AuthorSearchDto;
 import com.ccsw.tutorial.entities.Author;
 import com.ccsw.tutorial.service.author.AuthorService;
 

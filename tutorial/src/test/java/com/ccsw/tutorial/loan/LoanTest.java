@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ccsw.tutorial.dto.LoanDto;
+import com.ccsw.tutorial.dto.loan.LoanDto;
 import com.ccsw.tutorial.entities.Loan;
 import com.ccsw.tutorial.repository.LoanRepository;
 import com.ccsw.tutorial.service.loan.LoanServiceImpl;

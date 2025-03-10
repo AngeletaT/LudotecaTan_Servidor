@@ -2,7 +2,7 @@ package com.ccsw.tutorial.service.game;
 
 import java.util.List;
 
-import com.ccsw.tutorial.dto.GameDto;
+import com.ccsw.tutorial.dto.game.GameDto;
 import com.ccsw.tutorial.entities.Game;
 
 /**

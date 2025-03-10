@@ -1,4 +1,7 @@
-package com.ccsw.tutorial.dto;
+package com.ccsw.tutorial.dto.loan;
+
+import com.ccsw.tutorial.dto.client.ClientDto;
+import com.ccsw.tutorial.dto.game.GameDto;
 
 /**
  * @author ccsw

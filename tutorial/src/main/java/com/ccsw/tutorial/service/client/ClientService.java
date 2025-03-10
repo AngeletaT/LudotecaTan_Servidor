@@ -2,7 +2,7 @@ package com.ccsw.tutorial.service.client;
 
 import java.util.List;
 
-import com.ccsw.tutorial.dto.ClientDto;
+import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
 import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 

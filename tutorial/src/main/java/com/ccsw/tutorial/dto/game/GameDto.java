@@ -1,4 +1,7 @@
-package com.ccsw.tutorial.dto;
+package com.ccsw.tutorial.dto.game;
+
+import com.ccsw.tutorial.dto.author.AuthorDto;
+import com.ccsw.tutorial.dto.category.CategoryDto;
 
 /**
  * @author ccsw

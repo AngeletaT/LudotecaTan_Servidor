@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import com.ccsw.tutorial.dto.LoanDto;
-import com.ccsw.tutorial.dto.LoanSearchDto;
-import com.ccsw.tutorial.dto.LoanValidationResponse;
+import com.ccsw.tutorial.dto.loan.LoanDto;
+import com.ccsw.tutorial.dto.loan.LoanSearchDto;
+import com.ccsw.tutorial.dto.loan.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
 
 /**

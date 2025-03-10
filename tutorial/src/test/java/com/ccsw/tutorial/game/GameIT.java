@@ -1,8 +1,8 @@
 package com.ccsw.tutorial.game;
 
-import com.ccsw.tutorial.dto.AuthorDto;
-import com.ccsw.tutorial.dto.CategoryDto;
-import com.ccsw.tutorial.dto.GameDto;
+import com.ccsw.tutorial.dto.author.AuthorDto;
+import com.ccsw.tutorial.dto.category.CategoryDto;
+import com.ccsw.tutorial.dto.game.GameDto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

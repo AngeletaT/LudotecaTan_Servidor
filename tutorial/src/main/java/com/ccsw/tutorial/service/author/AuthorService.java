@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import com.ccsw.tutorial.dto.AuthorDto;
-import com.ccsw.tutorial.dto.AuthorSearchDto;
+import com.ccsw.tutorial.dto.author.AuthorDto;
+import com.ccsw.tutorial.dto.author.AuthorSearchDto;
 import com.ccsw.tutorial.entities.Author;
 
 /**

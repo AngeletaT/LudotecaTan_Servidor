@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ccsw.tutorial.dto.ClientDto;
+import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
 import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 import com.ccsw.tutorial.service.client.ClientService;

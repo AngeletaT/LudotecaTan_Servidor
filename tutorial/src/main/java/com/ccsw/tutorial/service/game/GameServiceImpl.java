@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
-import com.ccsw.tutorial.dto.GameDto;
+import com.ccsw.tutorial.dto.game.GameDto;
 import com.ccsw.tutorial.entities.Game;
 import com.ccsw.tutorial.infrastructure.specifications.GameSpecification;
 import com.ccsw.tutorial.repository.GameRepository;

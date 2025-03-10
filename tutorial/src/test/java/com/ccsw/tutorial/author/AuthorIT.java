@@ -1,7 +1,7 @@
 package com.ccsw.tutorial.author;
 
-import com.ccsw.tutorial.dto.AuthorDto;
-import com.ccsw.tutorial.dto.AuthorSearchDto;
+import com.ccsw.tutorial.dto.author.AuthorDto;
+import com.ccsw.tutorial.dto.author.AuthorSearchDto;
 import com.ccsw.tutorial.common.pagination.PageableRequest;
 import com.ccsw.tutorial.config.ResponsePage;
 import org.junit.jupiter.api.Test;

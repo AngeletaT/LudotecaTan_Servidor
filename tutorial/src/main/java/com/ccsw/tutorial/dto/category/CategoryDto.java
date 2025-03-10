@@ -1,11 +1,12 @@
-package com.ccsw.tutorial.dto;
+package com.ccsw.tutorial.dto.category;
 
 /**
  * @author ccsw
  * 
  */
-public class ClientDto {
+public class CategoryDto {
     private Long id;
+
     private String name;
 
     /**

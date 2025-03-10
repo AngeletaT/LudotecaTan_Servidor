@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ccsw.tutorial.dto.ClientDto;
+import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
 import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 import com.ccsw.tutorial.repository.ClientRepository;

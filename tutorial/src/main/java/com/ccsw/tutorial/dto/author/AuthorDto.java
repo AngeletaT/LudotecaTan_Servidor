@@ -1,4 +1,4 @@
-package com.ccsw.tutorial.dto;
+package com.ccsw.tutorial.dto.author;
 
 /**
  * @author ccsw

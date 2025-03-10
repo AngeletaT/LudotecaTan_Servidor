@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ccsw.tutorial.dto.ClientDto;
+import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
 import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
 import com.ccsw.tutorial.repository.ClientRepository;

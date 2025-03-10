@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ccsw.tutorial.dto.CategoryDto;
+import com.ccsw.tutorial.dto.category.CategoryDto;
 import com.ccsw.tutorial.entities.Category;
 import com.ccsw.tutorial.service.category.CategoryService;
 

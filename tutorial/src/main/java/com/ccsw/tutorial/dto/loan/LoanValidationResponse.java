@@ -1,4 +1,4 @@
-package com.ccsw.tutorial.dto;
+package com.ccsw.tutorial.dto.loan;
 
 import java.util.List;
 
