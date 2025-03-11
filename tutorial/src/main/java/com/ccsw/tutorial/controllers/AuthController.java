@@ -58,7 +58,8 @@ public class AuthController {
         }
 
         String token = jwtUtil.generateToken(loginRequestDto.getUsername());
-        LoginResponseDto loginResponseDto = new LoginResponseDto(token);
+        String username = loginRequestDto.getUsername();
+        LoginResponseDto loginResponseDto = new LoginResponseDto(token, username);
         return ResponseEntity.ok(loginResponseDto);
     }
 
