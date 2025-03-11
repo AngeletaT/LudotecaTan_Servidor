@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,5 +80,20 @@ public class AuthController {
         adminRepository.save(admin);
 
         return ResponseEntity.ok("{\"message\": \"Se ha registrado el usuario correctamente\"}");
+    }
+
+    @Operation(summary = "Validate Token", description = "Method that validates a JWT token and returns the username")
+    @RequestMapping(path = "/validate", method = RequestMethod.GET)
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Token inválido\"}");
+        }
+
+        String username = jwtUtil.extractUsername(token);
+        return ResponseEntity.ok("{\"username\": \"" + username + "\"}");
     }
 }
