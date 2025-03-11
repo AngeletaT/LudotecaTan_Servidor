@@ -19,75 +19,68 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 public class AuthTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private AdminRepository adminRepository;
+        @Autowired
+        private AdminRepository adminRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    // Test que registra un nuevo admin y posteriormente permite el login con las
-    // mismas credenciales
-    @Test
-    public void testRegisterAndSigninSuccess() throws Exception {
-        // Limpieza o asegurarse de que no exista previamente el usuario de prueba
-        adminRepository.deleteAll();
+        // Test que registra un nuevo admin y posteriormente permite el login con las
+        // mismas credenciales
+        @Test
+        public void testRegisterAndSigninSuccess() throws Exception {
+                adminRepository.deleteAll();
 
-        RegisterRequestDto registerRequest = new RegisterRequestDto("testadmin", "password123");
+                RegisterRequestDto registerRequest = new RegisterRequestDto("testadmin", "password123");
 
-        // Registro
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value("User registered"));
+                mockMvc.perform(post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value("User registered"));
 
-        // Inicio de sesión con las mismas credenciales
-        LoginRequestDto loginRequest = new LoginRequestDto("testadmin", "password123");
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").exists());
-    }
+                LoginRequestDto loginRequest = new LoginRequestDto("testadmin", "password123");
+                mockMvc.perform(post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequest)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.token").exists());
+        }
 
-    // Test que verifica que no se pueda registrar un usuario con un username
-    // existente
-    @Test
-    public void testRegisterWithExistingUsername() throws Exception {
-        // Limpieza previa
-        adminRepository.deleteAll();
+        // Test que verifica que no se pueda registrar un usuario con un username
+        // existente
+        @Test
+        public void testRegisterWithExistingUsername() throws Exception {
+                adminRepository.deleteAll();
 
-        RegisterRequestDto registerRequest = new RegisterRequestDto("existingadmin", "password123");
+                RegisterRequestDto registerRequest = new RegisterRequestDto("existingadmin", "password123");
 
-        // Primer registro
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value("User registered"));
+                mockMvc.perform(post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value("User registered"));
 
-        // Intento de registro con el mismo username
-        mockMvc.perform(post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isBadRequest());
-    }
+                mockMvc.perform(post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(registerRequest)))
+                                .andExpect(status().isBadRequest());
+        }
 
-    // Test que verifica que el inicio de sesión con credenciales incorrectas
-    // devuelva error 401
-    @Test
-    public void testSigninWithWrongCredentials() throws Exception {
-        // Limpieza previa para asegurar que no exista el usuario
-        adminRepository.deleteAll();
+        // Test que verifica que el inicio de sesión con credenciales incorrectas
+        // devuelva error 401
+        @Test
+        public void testSigninWithWrongCredentials() throws Exception {
+                adminRepository.deleteAll();
 
-        LoginRequestDto loginRequest = new LoginRequestDto("nonexistent", "wrongpassword");
+                LoginRequestDto loginRequest = new LoginRequestDto("nonexistent", "wrongpassword");
 
-        mockMvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isUnauthorized());
-    }
+                mockMvc.perform(post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginRequest)))
+                                .andExpect(status().isUnauthorized());
+        }
 }
