@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ccsw.tutorial.dto.game.GameDto;
 import com.ccsw.tutorial.entities.Game;
+import com.ccsw.tutorial.exceptions.game.GameNotFoundException;
+import com.ccsw.tutorial.exceptions.game.InvalidGameException;
 import com.ccsw.tutorial.service.game.GameService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,10 +65,14 @@ public class GameController {
     @Operation(summary = "Save or Update", description = "Method that saves or updates a Game")
     @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
     public ResponseEntity<String> save(@PathVariable(name = "id", required = false) Long id, @RequestBody GameDto dto) {
-
-        gameService.save(id, dto);
-        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
-
+        try {
+            gameService.save(id, dto);
+            return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+        } catch (GameNotFoundException e) {
+            return ResponseEntity.status(404).body("{\"message\": \"" + e.getMessage() + "\"}");
+        } catch (InvalidGameException e) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 
 }
