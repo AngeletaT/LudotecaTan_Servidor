@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
 import com.ccsw.tutorial.repository.ClientRepository;
 
 import jakarta.transaction.Transactional;

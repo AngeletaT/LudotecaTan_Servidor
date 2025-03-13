@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
 import com.ccsw.tutorial.repository.ClientRepository;
 import com.ccsw.tutorial.service.client.ClientServiceImpl;
 

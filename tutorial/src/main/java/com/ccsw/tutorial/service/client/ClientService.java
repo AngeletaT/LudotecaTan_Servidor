@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
 
 /**
  * @author ccsw

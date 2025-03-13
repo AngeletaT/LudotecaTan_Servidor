@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exception.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
 import com.ccsw.tutorial.service.client.ClientService;
 
 import io.swagger.v3.oas.annotations.Operation;
