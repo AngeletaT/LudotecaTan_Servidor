@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ccsw.tutorial.dto.loan.LoanDto;
 import com.ccsw.tutorial.entities.Loan;
+import com.ccsw.tutorial.exceptions.loan.LoanNotFoundException;
 import com.ccsw.tutorial.repository.LoanRepository;
 import com.ccsw.tutorial.service.loan.LoanServiceImpl;
 
@@ -68,13 +69,14 @@ public class LoanTest {
 
     // TEST UPDATE LOAN
     public static final Long EXISTS_LOAN_ID = 1L;
+    public static final Long NOT_EXISTS_LOAN_ID = 0L;
 
     @Test
     public void saveExistsLoanIdShouldUpdate() {
 
         LoanDto loanDto = new LoanDto();
-        loanDto.setRentalDate("2025-03-01");
-        loanDto.setReturnDate("2025-03-10");
+        loanDto.setRentalDate("2025-09-01");
+        loanDto.setReturnDate("2025-09-10");
 
         Loan loan = mock(Loan.class);
         when(loanRepository.findById(EXISTS_LOAN_ID)).thenReturn(Optional.of(loan));
@@ -96,9 +98,17 @@ public class LoanTest {
         verify(loanRepository).deleteById(EXISTS_LOAN_ID);
     }
 
-    // TEST GET LOAN
-    public static final Long NOT_EXISTS_LOAN_ID = 0L;
+    @Test
+    public void deleteNotExistsLoanIdShouldThrowException() {
 
+        when(loanRepository.findById(NOT_EXISTS_LOAN_ID)).thenReturn(Optional.empty());
+
+        assertThrows(LoanNotFoundException.class, () -> {
+            loanService.delete(NOT_EXISTS_LOAN_ID);
+        });
+    }
+
+    // TEST GET LOAN
     @Test
     public void getExistsLoanIdShouldReturnLoan() {
 
@@ -113,12 +123,12 @@ public class LoanTest {
     }
 
     @Test
-    public void getNotExistsLoanIdShouldReturnNull() {
+    public void getNotExistsLoanIdShouldThrowException() {
 
         when(loanRepository.findById(NOT_EXISTS_LOAN_ID)).thenReturn(Optional.empty());
 
-        Loan loan = loanService.get(NOT_EXISTS_LOAN_ID);
-
-        assertNull(loan);
+        assertThrows(LoanNotFoundException.class, () -> {
+            loanService.get(NOT_EXISTS_LOAN_ID);
+        });
     }
 }

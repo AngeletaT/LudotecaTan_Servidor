@@ -104,11 +104,11 @@ public class LoanIT {
         }
 
         @Test
-        public void deleteWithNotExistsIdShouldInternalError() {
+        public void deleteWithNotExistsIdShouldReturnNotFound() {
 
                 ResponseEntity<?> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH + "/0",
                                 HttpMethod.DELETE, null, Void.class);
 
-                assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         }
 }

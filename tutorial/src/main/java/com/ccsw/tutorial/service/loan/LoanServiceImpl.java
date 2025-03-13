@@ -17,6 +17,8 @@ import com.ccsw.tutorial.dto.loan.LoanDto;
 import com.ccsw.tutorial.dto.loan.LoanSearchDto;
 import com.ccsw.tutorial.dto.loan.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
+import com.ccsw.tutorial.exceptions.loan.InvalidLoanException;
+import com.ccsw.tutorial.exceptions.loan.LoanNotFoundException;
 import com.ccsw.tutorial.infrastructure.specifications.LoanSpecification;
 import com.ccsw.tutorial.repository.ClientRepository;
 import com.ccsw.tutorial.repository.GameRepository;
@@ -46,7 +48,8 @@ public class LoanServiceImpl implements LoanService {
      */
     @Override
     public Loan get(Long id) {
-        return this.loanRepository.findById(id).orElse(null);
+        return this.loanRepository.findById(id)
+                .orElseThrow(() -> new LoanNotFoundException("Loan not found with id: " + id));
     }
 
     /**
@@ -85,12 +88,11 @@ public class LoanServiceImpl implements LoanService {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dto.getLoanDate());
                 spec = spec.and(LoanSpecification.activeOnDate(date));
             } catch (ParseException e) {
-                e.printStackTrace();
+                throw new InvalidLoanException("Error parsing date: " + e.getMessage());
             }
         }
 
         return this.loanRepository.findAll(spec, dto.getPageable().getPageable());
-
     }
 
     /**
@@ -113,7 +115,7 @@ public class LoanServiceImpl implements LoanService {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(loanDate);
                 spec = spec.and(LoanSpecification.activeOnDate(date));
             } catch (ParseException e) {
-                e.printStackTrace();
+                throw new InvalidLoanException("Error parsing date: " + e.getMessage());
             }
         }
 
@@ -131,7 +133,8 @@ public class LoanServiceImpl implements LoanService {
         if (id == null) {
             loan = new Loan();
         } else {
-            loan = this.loanRepository.findById(id).orElse(null);
+            loan = this.loanRepository.findById(id)
+                    .orElseThrow(() -> new LoanNotFoundException("Loan not found with id: " + id));
         }
 
         BeanUtils.copyProperties(data, loan, "id", "game", "client", "rentalDate", "returnDate");
@@ -141,11 +144,13 @@ public class LoanServiceImpl implements LoanService {
             loan.setRentalDate(sdf.parse(data.getRentalDate()));
             loan.setReturnDate(sdf.parse(data.getReturnDate()));
         } catch (ParseException e) {
-            throw new RuntimeException("Error parsing date" + e.getMessage(), e);
+            throw new InvalidLoanException("Error parsing date: " + e.getMessage());
         }
 
-        loan.setGame(this.gameRepository.findById(data.getGame().getId()).orElse(null));
-        loan.setClient(this.clientRepository.findById(data.getClient().getId()).orElse(null));
+        loan.setGame(this.gameRepository.findById(data.getGame().getId())
+                .orElseThrow(() -> new LoanNotFoundException("Game not found with id: " + data.getGame().getId())));
+        loan.setClient(this.clientRepository.findById(data.getClient().getId())
+                .orElseThrow(() -> new LoanNotFoundException("Client not found with id: " + data.getClient().getId())));
 
         this.loanRepository.save(loan);
     }
@@ -156,7 +161,7 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public void delete(Long id) throws Exception {
         if (this.get(id) == null) {
-            throw new Exception("Not exists");
+            throw new LoanNotFoundException("Loan not found with id: " + id);
         }
 
         this.loanRepository.deleteById(id);
@@ -175,10 +180,7 @@ public class LoanServiceImpl implements LoanService {
             rentalDate = sdf.parse(loanDto.getRentalDate());
             returnDate = sdf.parse(loanDto.getReturnDate());
         } catch (ParseException e) {
-            errorMessages.add("Formato de fecha inválido.");
-            response.setValid(false);
-            response.setErrorMessages(errorMessages);
-            return response;
+            throw new InvalidLoanException("Error parsing date: " + e.getMessage());
         }
 
         // Validaciones de fechas
@@ -217,5 +219,4 @@ public class LoanServiceImpl implements LoanService {
         response.setErrorMessages(errorMessages);
         return response;
     }
-
 }

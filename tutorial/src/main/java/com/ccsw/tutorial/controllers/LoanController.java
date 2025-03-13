@@ -19,14 +19,14 @@ import com.ccsw.tutorial.dto.loan.LoanDto;
 import com.ccsw.tutorial.dto.loan.LoanSearchDto;
 import com.ccsw.tutorial.dto.loan.LoanValidationResponse;
 import com.ccsw.tutorial.entities.Loan;
+import com.ccsw.tutorial.exceptions.loan.LoanNotFoundException;
 import com.ccsw.tutorial.service.loan.LoanService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * @author ccsw
- *
+ * Author: ccsw
  */
 
 @Tag(name = "Loan", description = "API of Loan")
@@ -66,7 +66,6 @@ public class LoanController {
     @Operation(summary = "Find Paginated", description = "Method that return a paginated list of Loans")
     @RequestMapping(path = "/page", method = RequestMethod.POST)
     public Page<LoanDto> findPage(@RequestBody LoanSearchDto dto) {
-
         Page<Loan> page = this.loanService.findPage(dto);
 
         return new PageImpl<>(
@@ -87,7 +86,6 @@ public class LoanController {
     @Operation(summary = "Find Filtered Paginated", description = "Method that return a paginated and filtered of Loans")
     @RequestMapping(path = "/filter", method = RequestMethod.POST)
     public Page<LoanDto> findPageFiltered(@RequestBody LoanSearchDto dto) {
-
         Page<Loan> page = this.loanService.findPageFiltered(dto);
 
         return new PageImpl<>(
@@ -107,9 +105,12 @@ public class LoanController {
     @Operation(summary = "Create/Update", description = "Method that creates or updates a Loan")
     @RequestMapping(path = "", method = RequestMethod.PUT)
     public ResponseEntity<String> save(@RequestBody LoanDto dto) {
-        this.loanService.save(dto.getId(), dto);
-        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
-
+        try {
+            this.loanService.save(dto.getId(), dto);
+            return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+        } catch (LoanNotFoundException e) {
+            return ResponseEntity.status(404).body("{\"message\": \"Loan not found\"}");
+        }
     }
 
     /**
