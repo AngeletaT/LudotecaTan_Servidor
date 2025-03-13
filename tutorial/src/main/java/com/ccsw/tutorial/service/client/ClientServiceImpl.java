@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.client.ClientNotFoundException;
+import com.ccsw.tutorial.exceptions.client.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.client.InvalidClientException;
 import com.ccsw.tutorial.repository.ClientRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,7 +30,8 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public Client get(Long id) {
-        return this.clientRepository.findById(id).orElse(null);
+        return this.clientRepository.findById(id)
+                .orElseThrow(() -> new ClientNotFoundException("Cliente no encontrado."));
     }
 
     /**
@@ -43,7 +46,11 @@ public class ClientServiceImpl implements ClientService {
      * {@inheritDoc}
      */
     @Override
-    public void save(Long id, ClientDto dto) throws ClientAlreadyExistsException {
+    public void save(Long id, ClientDto dto) throws ClientAlreadyExistsException, InvalidClientException {
+        if (dto.getName() == null || dto.getName().isEmpty()) {
+            throw new InvalidClientException("El nombre del cliente no puede estar vacío.");
+        }
+
         Optional<Client> existingClient = this.clientRepository.findByName(dto.getName());
         if (existingClient.isPresent() && (id == null || !existingClient.get().getId().equals(id))) {
             throw new ClientAlreadyExistsException("Ya existe un cliente con el mismo nombre");
@@ -54,9 +61,6 @@ public class ClientServiceImpl implements ClientService {
             client = new Client();
         } else {
             client = this.get(id);
-            if (client == null) {
-                client = new Client();
-            }
         }
         client.setName(dto.getName());
         this.clientRepository.save(client);
@@ -66,9 +70,9 @@ public class ClientServiceImpl implements ClientService {
      * {@inheritDoc}
      */
     @Override
-    public void delete(Long id) throws Exception {
+    public void delete(Long id) throws ClientNotFoundException {
         if (this.get(id) == null) {
-            throw new Exception("Not exists");
+            throw new ClientNotFoundException("Cliente no encontrado.");
         }
         this.clientRepository.deleteById(id);
     }

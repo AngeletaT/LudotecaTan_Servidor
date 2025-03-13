@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.client.ClientNotFoundException;
+import com.ccsw.tutorial.exceptions.client.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.client.InvalidClientException;
 import com.ccsw.tutorial.service.client.ClientService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,7 +50,6 @@ public class ClientController {
         List<Client> clients = this.clientService.findAll();
 
         return clients.stream().map(e -> mapper.map(e, ClientDto.class)).collect(Collectors.toList());
-
     }
 
     /**
@@ -65,7 +66,11 @@ public class ClientController {
             this.clientService.save(id, dto);
             return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
         } catch (ClientAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.status(409).body("{\"message\": \"" + e.getMessage() + "\"}");
+        } catch (ClientNotFoundException e) {
+            return ResponseEntity.status(404).body("{\"message\": \"" + e.getMessage() + "\"}");
+        } catch (InvalidClientException e) {
+            return ResponseEntity.status(400).body("{\"message\": \"" + e.getMessage() + "\"}");
         }
     }
 
@@ -76,8 +81,14 @@ public class ClientController {
      */
     @Operation(summary = "Delete", description = "Method that deletes a Client")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> delete(@PathVariable("id") Long id) throws Exception {
-        this.clientService.delete(id);
-        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente el borrado\"}");
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+        try {
+            this.clientService.delete(id);
+            return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente el borrado\"}");
+        } catch (ClientNotFoundException e) {
+            return ResponseEntity.status(404).body("{\"message\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("{\"message\": \"Error interno del servidor\"}");
+        }
     }
 }

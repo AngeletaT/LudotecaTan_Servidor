@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ccsw.tutorial.dto.client.ClientDto;
 import com.ccsw.tutorial.entities.Client;
-import com.ccsw.tutorial.exceptions.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.client.ClientAlreadyExistsException;
+import com.ccsw.tutorial.exceptions.client.ClientNotFoundException;
+import com.ccsw.tutorial.exceptions.client.InvalidClientException;
 import com.ccsw.tutorial.repository.ClientRepository;
 import com.ccsw.tutorial.service.client.ClientServiceImpl;
 
@@ -51,7 +52,7 @@ public class ClientTest {
     public static final String CLIENT_NAME = "CAT1";
 
     @Test
-    public void saveNotExistsClientIdShouldInsert() throws ClientAlreadyExistsException {
+    public void saveNotExistsClientIdShouldInsert() throws ClientAlreadyExistsException, InvalidClientException {
 
         ClientDto clientDto = new ClientDto();
         clientDto.setName(CLIENT_NAME);
@@ -69,7 +70,7 @@ public class ClientTest {
     public static final Long EXISTS_CLIENT_ID = 1L;
 
     @Test
-    public void saveExistsClientIdShouldUpdate() throws ClientAlreadyExistsException {
+    public void saveExistsClientIdShouldUpdate() throws ClientAlreadyExistsException, InvalidClientException {
 
         ClientDto clientDto = new ClientDto();
         clientDto.setName(CLIENT_NAME);
@@ -84,7 +85,7 @@ public class ClientTest {
 
     // TEST DELETE CLIENT
     @Test
-    public void deleteExistsClientIdShouldDelete() throws Exception {
+    public void deleteExistsClientIdShouldDelete() throws ClientNotFoundException {
 
         Client client = mock(Client.class);
         when(clientRepository.findById(EXISTS_CLIENT_ID)).thenReturn(Optional.of(client));
@@ -111,13 +112,13 @@ public class ClientTest {
     }
 
     @Test
-    public void getNotExistsClientIdShouldReturnNull() {
+    public void getNotExistsClientIdShouldThrowException() {
 
         when(clientRepository.findById(NOT_EXISTS_CLIENT_ID)).thenReturn(Optional.empty());
 
-        Client client = clientService.get(NOT_EXISTS_CLIENT_ID);
-
-        assertNull(client);
+        assertThrows(ClientNotFoundException.class, () -> {
+            clientService.get(NOT_EXISTS_CLIENT_ID);
+        });
     }
 
     // TEST DUPLICATE CLIENT NAME
@@ -134,6 +135,18 @@ public class ClientTest {
         when(clientRepository.findByName(CLIENT_NAME)).thenReturn(Optional.of(existingClient));
 
         assertThrows(ClientAlreadyExistsException.class, () -> {
+            clientService.save(null, clientDto);
+        });
+    }
+
+    // TEST INVALID CLIENT NAME
+    @Test
+    public void saveInvalidClientNameShouldThrowException() {
+
+        ClientDto clientDto = new ClientDto();
+        clientDto.setName("");
+
+        assertThrows(InvalidClientException.class, () -> {
             clientService.save(null, clientDto);
         });
     }

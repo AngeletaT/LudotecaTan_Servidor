@@ -1,4 +1,4 @@
-package com.ccsw.tutorial.exceptions;
+package com.ccsw.tutorial.exceptions.client;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
