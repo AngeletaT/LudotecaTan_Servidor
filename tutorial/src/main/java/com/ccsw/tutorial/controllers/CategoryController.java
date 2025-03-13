@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ccsw.tutorial.dto.category.CategoryDto;
 import com.ccsw.tutorial.entities.Category;
+import com.ccsw.tutorial.exceptions.category.CategoryNotFoundException;
+import com.ccsw.tutorial.exceptions.category.InvalidCategoryException;
 import com.ccsw.tutorial.service.category.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,8 +62,14 @@ public class CategoryController {
     @RequestMapping(path = { "", "/{id}" }, method = RequestMethod.PUT)
     public ResponseEntity<String> save(@PathVariable(name = "id", required = false) Long id,
             @RequestBody CategoryDto dto) {
-        this.categoryService.save(id, dto);
-        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+        try {
+            this.categoryService.save(id, dto);
+            return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente la acción\"}");
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(404).body("{\"message\": \"" + e.getMessage() + "\"}");
+        } catch (InvalidCategoryException e) {
+            return ResponseEntity.badRequest().body("{\"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     /**
@@ -72,7 +80,11 @@ public class CategoryController {
     @Operation(summary = "Delete", description = "Method that deletes a Category")
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<String> delete(@PathVariable("id") Long id) throws Exception {
-        this.categoryService.delete(id);
-        return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente el borrado\"}");
+        try {
+            this.categoryService.delete(id);
+            return ResponseEntity.ok("{\"message\": \"Se ha realizado correctamente el borrado\"}");
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(404).body("{\"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 }

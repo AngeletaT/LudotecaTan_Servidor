@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service;
 
 import com.ccsw.tutorial.dto.category.CategoryDto;
 import com.ccsw.tutorial.entities.Category;
+import com.ccsw.tutorial.exceptions.category.CategoryNotFoundException;
+import com.ccsw.tutorial.exceptions.category.InvalidCategoryException;
 import com.ccsw.tutorial.repository.CategoryRepository;
 
 import jakarta.transaction.Transactional;
 
 /**
- * @author ccsw
- *
+ * {@inheritDoc}
  */
 @Service
 @Transactional
@@ -27,8 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Category get(Long id) {
-
-        return this.categoryRepository.findById(id).orElse(null);
+        return this.categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("Categoría no encontrada."));
     }
 
     /**
@@ -36,7 +37,6 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public List<Category> findAll() {
-
         return (List<Category>) this.categoryRepository.findAll();
     }
 
@@ -45,6 +45,9 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void save(Long id, CategoryDto dto) {
+        if (dto.getName() == null || dto.getName().isEmpty()) {
+            throw new InvalidCategoryException("El nombre de la categoría es obligatorio.");
+        }
 
         Category category;
 
@@ -63,10 +66,9 @@ public class CategoryServiceImpl implements CategoryService {
      * {@inheritDoc}
      */
     @Override
-    public void delete(Long id) throws Exception {
-
-        if (this.get(id) == null) {
-            throw new Exception("Not exists");
+    public void delete(Long id) {
+        if (!this.categoryRepository.existsById(id)) {
+            throw new CategoryNotFoundException("Categoría no encontrada.");
         }
 
         this.categoryRepository.deleteById(id);

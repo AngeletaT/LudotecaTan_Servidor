@@ -70,6 +70,18 @@ public class CategoryIT {
                 assertEquals(NEW_CATEGORY_NAME, categorySearch.getName());
         }
 
+        @Test
+        public void saveWithInvalidDataShouldThrowException() {
+
+                CategoryDto dto = new CategoryDto();
+                dto.setName("");
+
+                ResponseEntity<?> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.PUT,
+                                new HttpEntity<>(dto), Void.class);
+
+                assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        }
+
         // TEST UPDATE CATEGORY
         public static final Long MODIFY_CATEGORY_ID = 3L;
 
@@ -94,9 +106,8 @@ public class CategoryIT {
                 assertEquals(NEW_CATEGORY_NAME, categorySearch.getName());
         }
 
-        // TEST UPDATE CATEGORY WITH NOT EXIST ID
         @Test
-        public void modifyWithNotExistIdShouldInternalError() {
+        public void modifyWithNotExistIdShouldThrowException() {
 
                 CategoryDto dto = new CategoryDto();
                 dto.setName(NEW_CATEGORY_NAME);
@@ -105,7 +116,7 @@ public class CategoryIT {
                                 LOCALHOST + port + SERVICE_PATH + "/" + NEW_CATEGORY_ID,
                                 HttpMethod.PUT, new HttpEntity<>(dto), Void.class);
 
-                assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         }
 
         // TEST DELETE CATEGORY
@@ -125,12 +136,12 @@ public class CategoryIT {
         }
 
         @Test
-        public void deleteWithNotExistsIdShouldInternalError() {
+        public void deleteWithNotExistsIdShouldThrowException() {
 
                 ResponseEntity<?> response = restTemplate.exchange(
                                 LOCALHOST + port + SERVICE_PATH + "/" + NEW_CATEGORY_ID,
                                 HttpMethod.DELETE, null, Void.class);
 
-                assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         }
 }

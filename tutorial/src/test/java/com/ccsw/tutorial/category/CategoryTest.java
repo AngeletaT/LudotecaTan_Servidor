@@ -7,6 +7,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ccsw.tutorial.dto.category.CategoryDto;
 import com.ccsw.tutorial.entities.Category;
+import com.ccsw.tutorial.exceptions.category.CategoryNotFoundException;
+import com.ccsw.tutorial.exceptions.category.InvalidCategoryException;
 import com.ccsw.tutorial.repository.CategoryRepository;
 import com.ccsw.tutorial.service.category.CategoryServiceImpl;
 
@@ -65,6 +68,16 @@ public class CategoryTest {
         assertEquals(CATEGORY_NAME, category.getValue().getName());
     }
 
+    @Test
+    public void saveWithInvalidDataShouldThrowException() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("");
+
+        assertThrows(InvalidCategoryException.class, () -> {
+            categoryService.save(null, categoryDto);
+        });
+    }
+
     // TEST UPDATE CATEGORY
     public static final Long EXISTS_CATEGORY_ID = 1L;
 
@@ -82,9 +95,21 @@ public class CategoryTest {
         verify(categoryRepository).save(category);
     }
 
+    @Test
+    public void saveWithNotExistIdShouldThrowException() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName(CATEGORY_NAME);
+
+        when(categoryRepository.findById(EXISTS_CATEGORY_ID)).thenReturn(Optional.empty());
+
+        assertThrows(CategoryNotFoundException.class, () -> {
+            categoryService.save(EXISTS_CATEGORY_ID, categoryDto);
+        });
+    }
+
     // TEST DELETE CATEGORY
     @Test
-    public void deleteExistsCategoryIdShouldDelete() throws Exception {
+    public void deleteExistsCategoryIdShouldDelete() {
 
         Category category = mock(Category.class);
         when(categoryRepository.findById(EXISTS_CATEGORY_ID)).thenReturn(Optional.of(category));
@@ -92,6 +117,15 @@ public class CategoryTest {
         categoryService.delete(EXISTS_CATEGORY_ID);
 
         verify(categoryRepository).deleteById(EXISTS_CATEGORY_ID);
+    }
+
+    @Test
+    public void deleteWithNotExistIdShouldThrowException() {
+        when(categoryRepository.findById(EXISTS_CATEGORY_ID)).thenReturn(Optional.empty());
+
+        assertThrows(CategoryNotFoundException.class, () -> {
+            categoryService.delete(EXISTS_CATEGORY_ID);
+        });
     }
 
     // TEST GET CATEGORY
@@ -111,12 +145,11 @@ public class CategoryTest {
     }
 
     @Test
-    public void getNotExistsCategoryIdShouldReturnNull() {
-
+    public void getNotExistsCategoryIdShouldThrowException() {
         when(categoryRepository.findById(NOT_EXISTS_CATEGORY_ID)).thenReturn(Optional.empty());
 
-        Category category = categoryService.get(NOT_EXISTS_CATEGORY_ID);
-
-        assertNull(category);
+        assertThrows(CategoryNotFoundException.class, () -> {
+            categoryService.get(NOT_EXISTS_CATEGORY_ID);
+        });
     }
 }
